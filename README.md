@@ -168,7 +168,15 @@ Logout ou HTTP 401 → token apagado + cache limpo → volta ao Login
 
 ## Integração com a API
 
-O app consome a API REST da disciplina de Java Advanced. As rotas utilizadas estão centralizadas em `src/api/endpoints.ts`:
+O app consome a API REST da disciplina de Java Advanced (Spring Boot), publicada no Render:
+
+- **URL base:** https://nexus-verde-java-gs2026-2-tprk.onrender.com/api
+- **Swagger:** https://nexus-verde-java-gs2026-2-tprk.onrender.com/swagger-ui/index.html
+- **Saúde da API:** https://nexus-verde-java-gs2026-2-tprk.onrender.com/actuator/health
+
+A URL já vem configurada em `src/config/env.ts`. Para usar outra instância (por exemplo, a API rodando no computador), crie um arquivo `.env` a partir do `.env.example` e informe `EXPO_PUBLIC_API_URL`.
+
+Todas as rotas abaixo, exceto cadastro e login, exigem o cabeçalho `Authorization: Bearer <token>`. As rotas utilizadas estão centralizadas em `src/api/endpoints.ts`:
 
 | Método | Rota                        | Uso                                          |
 | ------ | --------------------------- | -------------------------------------------- |
@@ -187,7 +195,13 @@ O app consome a API REST da disciplina de Java Advanced. As rotas utilizadas est
 | DELETE | `/pontos-agua/{id}`         | Exclusão do ponto (equipe)                   |
 | GET    | `/regioes`                  | Regiões afetadas                             |
 
-> **Situação atual:** enquanto a API Java é finalizada, os serviços usam dados provisórios em memória (`src/services/placeholder`), com o mesmo formato de requisição e resposta da API. Esta seção será atualizada com o endereço da API publicada.
+Detalhes da integração:
+
+- **Paginação:** as listagens da API seguem o formato do Spring Data (`content`, `totalElements`...). O app busca uma página com até 200 registros (`?page=0&size=200`) e faz filtros e ordenação na tela.
+- **Papéis:** o campo `papel` do usuário (`CIDADAO` ou `EQUIPE`) define o que cada perfil vê e pode fazer no app; a API também valida as permissões e responde `403` quando a ação não é permitida.
+- **Criações sem duplicidade:** os `POST` enviam o cabeçalho `Idempotency-Key` com um identificador único.
+- **Erros:** as respostas de erro da API (`{ "message": ..., "errors": { campo: mensagem } }`) são convertidas em mensagens na tela por `src/api/apiError.ts`. Sem conexão, tempo esgotado e erros 5xx também têm mensagens próprias.
+- **Plano gratuito do Render:** a API "dorme" após um período sem uso e pode levar cerca de 1 minuto para responder na primeira requisição. Por isso, o app chama `/actuator/health` assim que abre (para "acordar" a API enquanto o usuário faz login) e espera até 60 segundos por resposta.
 
 ## Como executar
 
@@ -222,12 +236,13 @@ npm start
 
 ### Contas de teste
 
-| Perfil          | E-mail                  | Senha         |
-| --------------- | ----------------------- | ------------- |
-| Cidadão         | `maria@nexusverde.com`  | `Cidadao@123` |
-| Equipe de apoio | `equipe@nexusverde.com` | `Equipe@123`  |
+As contas abaixo estão cadastradas na API publicada:
 
-Também é possível criar uma conta de cidadão pela tela de cadastro.
+| Perfil  | E-mail                       | Senha       |
+| ------- | ---------------------------- | ----------- |
+| Cidadão | `maria.teste@nexusverde.com` | `Nexus2026` |
+
+Também é possível criar uma conta de cidadão pela tela de cadastro. Contas da **Equipe de apoio** são criadas pela API (não pelo app); a conta de teste da equipe está no README da API Java.
 
 ### Scripts
 
