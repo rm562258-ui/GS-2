@@ -3,20 +3,20 @@ import { Controller, type Control, type FieldValues, type Path } from 'react-hoo
 
 import { TextField } from '@/components/ui';
 
-type FormTextFieldProps<TFormValues extends FieldValues> = Omit<
+type FormTextFieldProps<TFormValues extends FieldValues, TTransformedValues = TFormValues> = Omit<
   ComponentProps<typeof TextField>,
   'value' | 'onChangeText' | 'onBlur' | 'error'
 > & {
-  control: Control<TFormValues>;
+  control: Control<TFormValues, unknown, TTransformedValues>;
   name: Path<TFormValues>;
 };
 
 // Liga o TextField ao react-hook-form, exibindo o erro de validação do campo.
-export function FormTextField<TFormValues extends FieldValues>({
+export function FormTextField<TFormValues extends FieldValues, TTransformedValues = TFormValues>({
   control,
   name,
   ...textFieldProps
-}: FormTextFieldProps<TFormValues>) {
+}: FormTextFieldProps<TFormValues, TTransformedValues>) {
   return (
     <Controller
       control={control}
