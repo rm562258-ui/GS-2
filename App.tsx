@@ -7,6 +7,7 @@ import { useEffect, useMemo } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { queryClient } from '@/config/queryClient';
+import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import { ThemeProvider, useAppTheme } from '@/contexts/ThemeContext';
 import { ToastProvider } from '@/contexts/ToastContext';
 import { createNavigationTheme } from '@/navigation/navigationTheme';
@@ -17,24 +18,31 @@ SplashScreen.preventAutoHideAsync();
 
 function AppContent() {
   const appTheme = useAppTheme();
+  const { status } = useAuth();
   const navigationTheme = useMemo(() => createNavigationTheme(appTheme), [appTheme]);
+  const isRestoringSession = status === 'restoring';
+
+  // A splash continua visível até a sessão salva ser verificada.
+  useEffect(() => {
+    if (!isRestoringSession) {
+      SplashScreen.hideAsync();
+    }
+  }, [isRestoringSession]);
+
+  if (isRestoringSession) {
+    return null;
+  }
 
   return (
     <NavigationContainer theme={navigationTheme}>
-      <RootNavigator />
       <StatusBar style={appTheme.isDark ? 'light' : 'dark'} />
+      <RootNavigator />
     </NavigationContainer>
   );
 }
 
 export default function App() {
   const [fontsLoaded, fontError] = useFonts(fontFiles);
-
-  useEffect(() => {
-    if (fontsLoaded || fontError) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, fontError]);
 
   if (!fontsLoaded && !fontError) {
     return null;
@@ -45,7 +53,9 @@ export default function App() {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
           <ToastProvider>
-            <AppContent />
+            <AuthProvider>
+              <AppContent />
+            </AuthProvider>
           </ToastProvider>
         </ThemeProvider>
       </QueryClientProvider>

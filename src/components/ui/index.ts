@@ -9,6 +9,7 @@ export { Chip } from './Chip';
 export { FloatingActionButton } from './FloatingActionButton';
 export { Icon } from './Icon';
 export type { IconName } from './Icon';
+export { InlineMessage } from './InlineMessage';
 export { Screen } from './Screen';
 export { EmptyState, ErrorState, LoadingState } from './StateViews';
 export { TextField } from './TextField';

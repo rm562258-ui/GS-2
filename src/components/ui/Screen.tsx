@@ -1,7 +1,6 @@
-import type { ReactElement, ReactNode } from 'react';
+import { useRef, useState, type ComponentRef, type ReactElement, type ReactNode } from 'react';
 import {
   KeyboardAvoidingView,
-  Platform,
   ScrollView,
   StyleSheet,
   View,
@@ -32,28 +31,39 @@ export function Screen({
 }: ScreenProps) {
   const { colors, spacing } = useAppTheme();
   const padding = padded ? spacing.md : 0;
+  const containerRef = useRef<ComponentRef<typeof View>>(null);
+  const [keyboardOffset, setKeyboardOffset] = useState(0);
+
+  // No Android de ponta a ponta a janela não encolhe quando o teclado abre. O KeyboardAvoidingView
+  // precisa saber onde a tela começa (abaixo do cabeçalho) para calcular quanto o teclado cobre.
+  const measureKeyboardOffset = () => {
+    containerRef.current?.measureInWindow((_x, y) => setKeyboardOffset(y));
+  };
 
   return (
     <SafeAreaView edges={edges} style={[styles.flex, { backgroundColor: colors.background }]}>
-      <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-        {scroll ? (
-          <ScrollView
-            keyboardShouldPersistTaps="handled"
-            refreshControl={refreshControl}
-            contentContainerStyle={[
-              { padding, paddingBottom: padding + spacing.xxl },
-              contentContainerStyle,
-            ]}
-          >
-            {children}
-          </ScrollView>
-        ) : (
-          <View style={[styles.flex, { padding }, contentContainerStyle]}>{children}</View>
-        )}
-      </KeyboardAvoidingView>
+      <View ref={containerRef} style={styles.flex} onLayout={measureKeyboardOffset}>
+        <KeyboardAvoidingView
+          style={styles.flex}
+          behavior="padding"
+          keyboardVerticalOffset={keyboardOffset}
+        >
+          {scroll ? (
+            <ScrollView
+              keyboardShouldPersistTaps="handled"
+              refreshControl={refreshControl}
+              contentContainerStyle={[
+                { padding, paddingBottom: padding + spacing.xxl },
+                contentContainerStyle,
+              ]}
+            >
+              {children}
+            </ScrollView>
+          ) : (
+            <View style={[styles.flex, { padding }, contentContainerStyle]}>{children}</View>
+          )}
+        </KeyboardAvoidingView>
+      </View>
     </SafeAreaView>
   );
 }
