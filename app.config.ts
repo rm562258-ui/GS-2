@@ -16,13 +16,17 @@ function runGit(command: string): string | null {
   }
 }
 
+// No EAS Build o código é enviado a partir do commit e o hash vem de EAS_BUILD_GIT_COMMIT_HASH.
+const easCommitHash = process.env.EAS_BUILD_GIT_COMMIT_HASH;
+
 // Hash do commit de referência exibido na tela "Sobre o App".
-// No EAS Build o código é clonado e o hash vem da variável EAS_BUILD_GIT_COMMIT_HASH.
-const commitHash =
-  process.env.EAS_BUILD_GIT_COMMIT_HASH ?? runGit('rev-parse HEAD') ?? 'indisponível';
+const commitHash = easCommitHash ?? runGit('rev-parse HEAD') ?? 'indisponível';
 
 // Indica se a build foi gerada com alterações ainda não commitadas.
-const workingTreeStatus = runGit('status --porcelain');
+// No EAS a árvore limpa é garantida pelo "requireCommit" do eas.json (o envio é recusado se
+// houver alterações), e lá o git status não é confiável: o próprio processo de build altera
+// arquivos. Por isso a verificação só é feita nas builds locais.
+const workingTreeStatus = easCommitHash ? '' : runGit('status --porcelain');
 const hasUncommittedChanges = workingTreeStatus !== null && workingTreeStatus.length > 0;
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
