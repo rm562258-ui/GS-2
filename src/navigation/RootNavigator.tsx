@@ -19,7 +19,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 // Ao sair, o grupo protegido é desmontado e o usuário volta para o Login.
 export function RootNavigator() {
   const { colors, fontFamily } = useAppTheme();
-  const { user } = useAuth();
+  const { user, isTeamMember } = useAuth();
 
   return (
     <Stack.Navigator
@@ -52,13 +52,16 @@ export function RootNavigator() {
             component={WaterPointDetailsScreen}
             options={{ title: 'Ponto de água' }}
           />
-          <Stack.Screen
-            name="WaterPointForm"
-            component={WaterPointFormScreen}
-            options={({ route }) => ({
-              title: route.params?.pointId ? 'Editar ponto' : 'Novo ponto de água',
-            })}
-          />
+          {/* Cadastro e edição de pontos de água: rota exclusiva da equipe de apoio. */}
+          {isTeamMember ? (
+            <Stack.Screen
+              name="WaterPointForm"
+              component={WaterPointFormScreen}
+              options={({ route }) => ({
+                title: route.params?.pointId ? 'Editar ponto' : 'Novo ponto de água',
+              })}
+            />
+          ) : null}
           <Stack.Screen name="About" component={AboutScreen} options={{ title: 'Sobre o App' }} />
         </Stack.Group>
       ) : (

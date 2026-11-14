@@ -35,7 +35,14 @@
           }
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "O Nexus Verde usa sua localização para mostrar os pontos de água mais próximos e informar onde você precisa de ajuda.",
+          "isAndroidBackgroundLocationEnabled": false
+        }
+      ]
     ]
   }
 }

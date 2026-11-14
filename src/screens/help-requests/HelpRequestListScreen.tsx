@@ -92,6 +92,7 @@ export function HelpRequestListScreen({ navigation }: HelpRequestListScreenProps
             gap: spacing.xs,
             paddingHorizontal: spacing.md,
             paddingTop: spacing.md,
+            paddingBottom: spacing.xxs,
           }}
         >
           {filters.map((filter) => (
@@ -121,6 +122,7 @@ const styles = StyleSheet.create({
   },
   filters: {
     flexGrow: 0,
+    flexShrink: 0,
   },
   list: {
     flexGrow: 1,

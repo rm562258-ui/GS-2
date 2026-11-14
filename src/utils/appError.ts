@@ -24,3 +24,8 @@ export function getErrorMessage(error: unknown): string {
 export function isUnauthorizedError(error: unknown): boolean {
   return error instanceof AppError && error.status === 401;
 }
+
+// Sem resposta do servidor (sem internet, tempo esgotado) ou servidor fora do ar.
+export function isNetworkError(error: unknown): boolean {
+  return error instanceof AppError && (error.status === undefined || error.status >= 500);
+}

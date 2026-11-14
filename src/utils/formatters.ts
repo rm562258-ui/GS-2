@@ -49,3 +49,12 @@ export function formatLiters(value: number): string {
 export function pluralize(count: number, singular: string, plural: string): string {
   return `${count} ${count === 1 ? singular : plural}`;
 }
+
+// Remove acentos e caixa para comparar textos na busca ("São José" encontra "sao jose").
+export function normalizeSearchText(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+}

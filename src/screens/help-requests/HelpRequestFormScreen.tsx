@@ -5,6 +5,7 @@ import { View } from 'react-native';
 
 import { ChipSelectField } from '@/components/form/ChipSelectField';
 import { FormTextField } from '@/components/form/FormTextField';
+import { LocationButton } from '@/components/form/LocationButton';
 import { SwitchField } from '@/components/form/SwitchField';
 import { Button, ErrorState, InlineMessage, LoadingState, Screen } from '@/components/ui';
 import { helpRequestTypeOptions, urgencyOptions } from '@/constants/domain';
@@ -23,6 +24,7 @@ import {
   type HelpRequestFormOutput,
 } from '@/schemas/helpRequestSchema';
 import { getErrorMessage } from '@/utils/appError';
+import type { Coordinates } from '@/utils/distance';
 
 type HelpRequestFormScreenProps = RootStackScreenProps<'HelpRequestForm'>;
 
@@ -37,6 +39,17 @@ export function HelpRequestFormScreen({ navigation, route }: HelpRequestFormScre
   const existingRequest = useHelpRequest(requestId);
   const createRequest = useCreateHelpRequest();
   const updateRequest = useUpdateHelpRequest();
+
+  // null = o usuário ainda não mexeu na localização (vale a do pedido salvo, se houver).
+  const [changedCoordinates, setChangedCoordinates] = useState<Coordinates | undefined | null>(
+    null,
+  );
+  const savedRequest = existingRequest.data;
+  const savedCoordinates =
+    savedRequest?.latitude !== undefined && savedRequest?.longitude !== undefined
+      ? { latitude: savedRequest.latitude, longitude: savedRequest.longitude }
+      : undefined;
+  const coordinates = changedCoordinates === null ? savedCoordinates : changedCoordinates;
 
   const {
     control,
@@ -76,8 +89,8 @@ export function HelpRequestFormScreen({ navigation, route }: HelpRequestFormScre
     setSubmitError(null);
     const input = {
       ...data,
-      latitude: existingRequest.data?.latitude,
-      longitude: existingRequest.data?.longitude,
+      latitude: coordinates?.latitude,
+      longitude: coordinates?.longitude,
     };
 
     try {
@@ -158,6 +171,11 @@ export function HelpRequestFormScreen({ navigation, route }: HelpRequestFormScre
           label="Cidade"
           icon="location-outline"
           placeholder="Ex.: Canoas"
+        />
+        <LocationButton
+          label="Anexar minha localização (opcional)"
+          value={coordinates}
+          onChange={setChangedCoordinates}
         />
 
         {submitError ? <InlineMessage message={submitError} /> : null}
