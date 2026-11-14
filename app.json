@@ -2,6 +2,7 @@
   "expo": {
     "name": "Nexus Verde",
     "slug": "nexus-verde",
+    "owner": "luanpmr",
     "scheme": "nexusverde",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -43,6 +44,11 @@
           "isAndroidBackgroundLocationEnabled": false
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "67a6c8a0-78e1-4a13-9928-01b9262e7210"
+      }
+    }
   }
 }

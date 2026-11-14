@@ -1,0 +1,25 @@
+{
+  "cli": {
+    "version": ">= 27.0.0",
+    "appVersionSource": "remote",
+    "requireCommit": true
+  },
+  "build": {
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://nexus-verde-java-gs2026-2-tprk.onrender.com/api"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://nexus-verde-java-gs2026-2-tprk.onrender.com/api"
+      }
+    }
+  }
+}

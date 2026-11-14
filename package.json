@@ -44,7 +44,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
-    "doctor": "npx expo-doctor"
+    "doctor": "npx expo-doctor",
+    "commit:hash": "git rev-parse HEAD",
+    "build:apk": "npx eas-cli build --platform android --profile preview"
   },
   "private": true
 }
