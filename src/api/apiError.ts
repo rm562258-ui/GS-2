@@ -88,17 +88,19 @@ export function toApiError(error: unknown): AppError {
   const fieldErrors =
     typeof body === 'object' ? extractFieldErrors(body?.errors ?? body?.erros) : undefined;
   const firstFieldError = fieldErrors ? Object.values(fieldErrors)[0] : undefined;
+
+  // A mensagem geral da API tem prioridade; mensagens genéricas de framework
+  // (ex.: "Bad Request") dão lugar ao primeiro erro de campo ou ao texto padrão do status.
+  const apiMessage = extractMessage(body);
+  const usefulApiMessage = apiMessage && !isGenericFrameworkMessage(apiMessage) ? apiMessage : null;
   const message =
-    firstFieldError ?? extractMessage(body) ?? statusMessages[status] ?? DEFAULT_ERROR_MESSAGE;
+    usefulApiMessage ?? firstFieldError ?? statusMessages[status] ?? DEFAULT_ERROR_MESSAGE;
 
-  // Mensagens genéricas de framework (ex.: "Bad Request") são trocadas pelo texto em português.
-  const isGenericMessage = /^(bad request|unauthorized|forbidden|not found|conflict)$/i.test(
-    message,
-  );
+  return new AppError(message, status, fieldErrors);
+}
 
-  return new AppError(
-    isGenericMessage ? (statusMessages[status] ?? DEFAULT_ERROR_MESSAGE) : message,
-    status,
-    fieldErrors,
+function isGenericFrameworkMessage(message: string): boolean {
+  return /^(bad request|unauthorized|forbidden|not found|conflict|unprocessable entity)$/i.test(
+    message.trim(),
   );
 }

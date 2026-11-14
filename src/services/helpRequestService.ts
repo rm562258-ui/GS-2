@@ -20,7 +20,7 @@ export const helpRequestService = {
 
   async create(input: HelpRequestInput): Promise<HelpRequest> {
     const { data } = await apiClient.post<SolicitacaoDto>(
-      endpoints.helpRequests.list,
+      endpoints.helpRequests.create,
       toHelpRequestDto(input),
     );
     return toHelpRequest(data);

@@ -43,7 +43,7 @@ export const waterPointService = {
 
   async create(input: WaterPointInput): Promise<WaterPoint> {
     const { data } = await apiClient.post<PontoAguaDto>(
-      endpoints.waterPoints.list,
+      endpoints.waterPoints.create,
       toWaterPointDto(input),
     );
     return toWaterPoint(data);

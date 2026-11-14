@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useMemo } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { warmUpApi } from '@/api/warmUp';
 import { queryClient } from '@/config/queryClient';
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import { ThemeProvider, useAppTheme } from '@/contexts/ThemeContext';
@@ -15,6 +16,7 @@ import { RootNavigator } from '@/navigation/RootNavigator';
 import { fontFiles } from '@/theme';
 
 SplashScreen.preventAutoHideAsync();
+warmUpApi();
 
 function AppContent() {
   const appTheme = useAppTheme();
