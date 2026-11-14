@@ -1,28 +1,103 @@
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Image, StyleSheet, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import {
+  AppText,
+  Badge,
+  Button,
+  Card,
+  Chip,
+  EmptyState,
+  FloatingActionButton,
+  Screen,
+  TextField,
+} from '@/components/ui';
 import { ThemeProvider, useAppTheme } from '@/contexts/ThemeContext';
+import { ToastProvider, useToast } from '@/contexts/ToastContext';
 import { fontFiles } from '@/theme';
 
 SplashScreen.preventAutoHideAsync();
 
-function BrandPreview() {
-  const { colors, typography, spacing, isDark } = useAppTheme();
+// Vitrine temporária dos componentes de interface (substituída pela navegação).
+function ComponentsPreview() {
+  const { isDark, spacing } = useAppTheme();
+  const { showToast } = useToast();
+  const [selectedFilter, setSelectedFilter] = useState('Todos');
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSave = () => {
+    setIsSaving(true);
+    setTimeout(() => {
+      setIsSaving(false);
+      showToast('Pedido de ajuda enviado com sucesso.', 'success');
+    }, 1200);
+  };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background, padding: spacing.xl }]}>
-      <Image
-        source={require('./assets/images/logo.png')}
-        style={styles.logo}
-        accessibilityIgnoresInvertColors
-      />
-      <Text style={[typography.display, { color: colors.text }]}>Nexus Verde</Text>
-      <Text style={[typography.body, { color: colors.textMuted, textAlign: 'center' }]}>
-        Conectando pessoas, tecnologia e água para salvar vidas.
-      </Text>
+    <View style={styles.flex}>
+      <Screen scroll edges={['top', 'left', 'right', 'bottom']}>
+        <View style={[styles.header, { gap: spacing.sm, marginBottom: spacing.lg }]}>
+          <Image source={require('./assets/images/logo.png')} style={styles.logo} />
+          <View>
+            <AppText variant="title">Nexus Verde</AppText>
+            <AppText tone="muted">Componentes de interface</AppText>
+          </View>
+        </View>
+
+        <View style={{ gap: spacing.md }}>
+          <TextField label="E-mail" icon="mail-outline" placeholder="voce@email.com" />
+          <TextField
+            label="Senha"
+            icon="lock-closed-outline"
+            placeholder="Sua senha"
+            secureTextEntry
+          />
+          <TextField label="Cidade" icon="location-outline" error="Informe a cidade." />
+
+          <View style={[styles.row, { gap: spacing.xs }]}>
+            {['Todos', 'Abertos', 'Atendidos'].map((filter) => (
+              <Chip
+                key={filter}
+                label={filter}
+                selected={selectedFilter === filter}
+                onPress={() => setSelectedFilter(filter)}
+              />
+            ))}
+          </View>
+
+          <View style={[styles.row, { gap: spacing.xs }]}>
+            <Badge label="Disponível" tone="success" icon="water" />
+            <Badge label="Estoque baixo" tone="warning" />
+            <Badge label="Crítico" tone="danger" />
+            <Badge label="Em atendimento" tone="info" />
+          </View>
+
+          <Card>
+            <AppText variant="subtitle">Ponto de distribuição Sarandi</AppText>
+            <AppText tone="muted">Av. Assis Brasil, 1200 · Porto Alegre</AppText>
+          </Card>
+
+          <Button title="Enviar pedido" icon="send" loading={isSaving} onPress={handleSave} />
+          <Button title="Ver pontos de água" variant="outline" icon="map-outline" />
+          <Button
+            title="Mostrar erro"
+            variant="danger"
+            onPress={() => showToast('Não foi possível conectar ao servidor.', 'error')}
+          />
+
+          <EmptyState
+            icon="water-outline"
+            title="Nenhum pedido ainda"
+            description="Quando você pedir ajuda, o pedido aparece aqui."
+          />
+        </View>
+      </Screen>
+
+      <FloatingActionButton label="Novo pedido" onPress={() => showToast('Abrir formulário')} />
       <StatusBar style={isDark ? 'light' : 'dark'} />
     </View>
   );
@@ -42,22 +117,30 @@ export default function App() {
   }
 
   return (
-    <ThemeProvider>
-      <BrandPreview />
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <ThemeProvider>
+        <ToastProvider>
+          <ComponentsPreview />
+        </ToastProvider>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  flex: {
     flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
   },
   logo: {
-    width: 120,
-    height: 120,
-    marginBottom: 8,
+    width: 56,
+    height: 56,
+  },
+  row: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
 });
