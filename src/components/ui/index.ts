@@ -12,6 +12,7 @@ export type { IconName } from './Icon';
 export { InfoRow } from './InfoRow';
 export { InlineMessage } from './InlineMessage';
 export { Screen } from './Screen';
+export { SectionHeader } from './SectionHeader';
 export { StatTile } from './StatTile';
 export { EmptyState, ErrorState, LoadingState } from './StateViews';
 export { TextField } from './TextField';

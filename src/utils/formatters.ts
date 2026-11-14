@@ -2,6 +2,9 @@ const MINUTE = 60 * 1000;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
 
+// Espaço não separável: impede a quebra de linha entre o número e a unidade ("há 2 h").
+const NBSP = ' ';
+
 export function formatRelativeTime(isoDate: string): string {
   const elapsed = Date.now() - new Date(isoDate).getTime();
 
@@ -12,14 +15,14 @@ export function formatRelativeTime(isoDate: string): string {
     return 'agora';
   }
   if (elapsed < HOUR) {
-    return `há ${Math.floor(elapsed / MINUTE)} min`;
+    return `há ${Math.floor(elapsed / MINUTE)}${NBSP}min`;
   }
   if (elapsed < DAY) {
-    return `há ${Math.floor(elapsed / HOUR)} h`;
+    return `há ${Math.floor(elapsed / HOUR)}${NBSP}h`;
   }
 
   const days = Math.floor(elapsed / DAY);
-  return days === 1 ? 'há 1 dia' : `há ${days} dias`;
+  return days === 1 ? `há 1${NBSP}dia` : `há ${days}${NBSP}dias`;
 }
 
 export function formatDateTime(isoDate: string): string {

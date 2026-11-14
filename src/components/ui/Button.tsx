@@ -8,12 +8,13 @@ import {
 } from 'react-native';
 
 import { useAppTheme } from '@/contexts/ThemeContext';
-import { MIN_TOUCH_SIZE } from '@/theme';
+import { MIN_TOUCH_SIZE, palette } from '@/theme';
 
 import { AppText } from './AppText';
 import { Icon, type IconName } from './Icon';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
+// "light" é para fundos escuros ou coloridos, como o banner da tela inicial.
+export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'light';
 
 type ButtonProps = {
   title: string;
@@ -43,7 +44,7 @@ export function Button({
   const { colors, radius, spacing } = useAppTheme();
   const isDisabled = disabled || loading;
 
-  const palette = {
+  const variantColors = {
     primary: {
       background: colors.primary,
       pressed: colors.primaryPressed,
@@ -57,6 +58,7 @@ export function Button({
     outline: { background: 'transparent', pressed: colors.primarySoft, content: colors.primary },
     ghost: { background: 'transparent', pressed: colors.surfaceMuted, content: colors.primary },
     danger: { background: colors.danger, pressed: colors.danger, content: colors.onPrimary },
+    light: { background: palette.white, pressed: palette.green50, content: palette.green700 },
   }[variant];
 
   return (
@@ -71,7 +73,7 @@ export function Button({
       style={({ pressed }) => [
         styles.base,
         {
-          backgroundColor: pressed ? palette.pressed : palette.background,
+          backgroundColor: pressed ? variantColors.pressed : variantColors.background,
           borderRadius: radius.md,
           paddingHorizontal: spacing.lg,
           borderColor: variant === 'outline' ? colors.primary : 'transparent',
@@ -82,11 +84,11 @@ export function Button({
       ]}
     >
       {loading ? (
-        <ActivityIndicator color={palette.content} />
+        <ActivityIndicator color={variantColors.content} />
       ) : (
         <View style={[styles.content, { gap: spacing.xs }]}>
-          {icon ? <Icon name={icon} size={20} color={palette.content} /> : null}
-          <AppText variant="button" style={{ color: palette.content }}>
+          {icon ? <Icon name={icon} size={20} color={variantColors.content} /> : null}
+          <AppText variant="button" style={{ color: variantColors.content }}>
             {title}
           </AppText>
         </View>
