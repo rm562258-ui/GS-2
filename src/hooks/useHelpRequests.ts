@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { helpRequestService } from '@/services/helpRequestService';
-import type { HelpRequestInput } from '@/types/models';
+import type { HelpRequestInput, HelpRequestStatus } from '@/types/models';
 
 import { queryKeys } from './queryKeys';
 
@@ -48,5 +48,16 @@ export function useDeleteHelpRequest() {
       queryClient.removeQueries({ queryKey: queryKeys.helpRequests.detail(id) });
       return queryClient.invalidateQueries({ queryKey: queryKeys.helpRequests.all });
     },
+  });
+}
+
+// Usado pela equipe de apoio para acompanhar o atendimento de um pedido.
+export function useUpdateHelpRequestStatus() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, status }: { id: string; status: HelpRequestStatus }) =>
+      helpRequestService.updateStatus(id, status),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.helpRequests.all }),
   });
 }

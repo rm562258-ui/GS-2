@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import type { IconName } from '@/components/ui';
+import { useAuth } from '@/contexts/AuthContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { HelpRequestListScreen } from '@/screens/help-requests/HelpRequestListScreen';
 import { HomeScreen } from '@/screens/home/HomeScreen';
@@ -23,6 +24,7 @@ const tabIcons: Record<keyof AppTabParamList, { active: IconName; inactive: Icon
 
 export function AppTabs() {
   const { colors, fontFamily } = useAppTheme();
+  const { isTeamMember } = useAuth();
 
   return (
     <Tab.Navigator
@@ -50,7 +52,10 @@ export function AppTabs() {
       <Tab.Screen
         name="HelpRequests"
         component={HelpRequestListScreen}
-        options={{ title: 'Pedidos' }}
+        options={{
+          title: isTeamMember ? 'Fila de pedidos' : 'Meus pedidos',
+          tabBarLabel: 'Pedidos',
+        }}
       />
       <Tab.Screen
         name="WaterPoints"

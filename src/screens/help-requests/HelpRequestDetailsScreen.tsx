@@ -1,5 +1,6 @@
 import { Alert, StyleSheet, View } from 'react-native';
 
+import { TeamStatusActions } from '@/components/help-requests/TeamStatusActions';
 import {
   AppText,
   Badge,
@@ -27,7 +28,7 @@ type HelpRequestDetailsScreenProps = RootStackScreenProps<'HelpRequestDetails'>;
 export function HelpRequestDetailsScreen({ navigation, route }: HelpRequestDetailsScreenProps) {
   const { requestId } = route.params;
   const { colors, spacing, radius } = useAppTheme();
-  const { user } = useAuth();
+  const { user, isTeamMember } = useAuth();
   const { showToast } = useToast();
   const { data: request, isLoading, isError, error, refetch } = useHelpRequest(requestId);
   const deleteRequest = useDeleteHelpRequest();
@@ -140,6 +141,8 @@ export function HelpRequestDetailsScreen({ navigation, route }: HelpRequestDetai
         </Card>
 
         <Button title="Ver no mapa" variant="outline" icon="map-outline" onPress={openMap} />
+
+        {isTeamMember ? <TeamStatusActions request={request} /> : null}
 
         {isOwner && !canChange ? (
           <InlineMessage
