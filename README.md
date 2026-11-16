@@ -238,9 +238,12 @@ npm start
 
 As contas abaixo estão cadastradas na API publicada:
 
-| Perfil  | E-mail                       | Senha       |
-| ------- | ---------------------------- | ----------- |
-| Cidadão | `maria.teste@nexusverde.com` | `Nexus2026` |
+| Perfil  | Nome          | E-mail                       | Senha       |
+| ------- | ------------- | ---------------------------- | ----------- |
+| Cidadão | Maria Teste   | `maria.teste@nexusverde.com` | `Nexus2026` |
+| Cidadão | João Pereira  | `joao.teste@nexusverde.com`  | `Nexus2026` |
+| Cidadão | Ana Souza     | `ana.teste@nexusverde.com`   | `Nexus2026` |
+| Cidadão | Pedro Almeida | `pedro.teste@nexusverde.com` | `Nexus2026` |
 
 Também é possível criar uma conta de cidadão pela tela de cadastro. Contas da **Equipe de apoio** são criadas pela API (não pelo app); a conta de teste da equipe está no README da API Java.
 
