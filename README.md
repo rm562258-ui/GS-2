@@ -245,7 +245,9 @@ As contas abaixo estão cadastradas na API publicada:
 | Cidadão | Ana Souza     | `ana.teste@nexusverde.com`   | `Nexus2026` |
 | Cidadão | Pedro Almeida | `pedro.teste@nexusverde.com` | `Nexus2026` |
 
-Também é possível criar uma conta de cidadão pela tela de cadastro. Contas da **Equipe de apoio** são criadas pela API (não pelo app); a conta de teste da equipe está no README da API Java.
+Também é possível criar uma conta de cidadão pela tela de cadastro. Todo o CRUD com a API pode ser avaliado com essas contas: os pedidos de ajuda são criados, listados, consultados, editados e excluídos na API.
+
+Contas da **Equipe de apoio** não podem ser criadas pelo app nem pelo cadastro público da API: por segurança, elas são liberadas pelos administradores da API. Com uma conta da equipe, a aba **Pedidos** passa a mostrar a fila de todos os pedidos por prioridade, com a atualização do atendimento, e a aba **Pontos de água** ganha o cadastro, a edição e a exclusão de pontos.
 
 ### Scripts
 
@@ -261,16 +263,14 @@ Também é possível criar uma conta de cidadão pela tela de cadastro. Contas d
 
 ## Fluxo sugerido para testar
 
-1. Criar uma conta de cidadão ou entrar com a conta de teste.
-2. No Início, tocar em **Pedir ajuda** e cadastrar um pedido.
-3. Abrir o pedido em **Pedidos**, editar e excluir.
+1. Criar uma conta de cidadão ou entrar com uma das contas de teste.
+2. No Início, tocar em **Pedir ajuda** e cadastrar um pedido (com a localização atual).
+3. Abrir o pedido em **Pedidos**, conferir a prioridade calculada pela API, editar e excluir.
 4. Em **Pontos de água**, permitir a localização, buscar um ponto, abrir os detalhes e usar **Como chegar**.
 5. Consultar os **Alertas**.
 6. No **Perfil**, trocar o tema e abrir **Sobre o App** para conferir o hash do commit.
-7. Sair e entrar com a conta da **Equipe de apoio**.
-8. Na fila de pedidos, abrir o pedido de maior prioridade e iniciar o atendimento.
-9. Em **Pontos de água**, cadastrar, editar e excluir um ponto.
-10. Sair e confirmar que as telas internas não ficam mais acessíveis.
+7. Sair e confirmar que as telas internas não ficam mais acessíveis.
+8. Tentar entrar com uma senha errada para ver a mensagem de erro.
 
 ## Vídeo de demonstração
 
