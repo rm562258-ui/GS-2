@@ -272,9 +272,21 @@ Contas da **Equipe de apoio** não podem ser criadas pelo app nem pelo cadastro 
 7. Sair e confirmar que as telas internas não ficam mais acessíveis.
 8. Tentar entrar com uma senha errada para ver a mensagem de erro.
 
+## Versão publicada
+
+O app está publicado no **Firebase App Distribution**, com o e-mail do professor cadastrado como tester.
+
+| Item                 | Valor                                      |
+| -------------------- | ------------------------------------------ |
+| Versão               | 1.0.0 (versionCode 3)                      |
+| Commit de referência | `271e05ee17b99e8f94911792de4b6aae33c9c8a9` |
+| Build                | EAS Build, perfil `preview` (APK Android)  |
+
+O hash mostrado na tela **Sobre o App** é o desse commit. Os commits feitos depois dele alteram apenas este README, sem mudar o código do app.
+
 ## Vídeo de demonstração
 
-**YouTube:** _link será adicionado após a gravação_
+**YouTube:** https://youtu.be/USOo5pzoMH8 (4 min 44 s)
 
 ## Integrantes
 
